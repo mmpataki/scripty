@@ -1,4 +1,4 @@
-package scripty.controllers;
+package scripty.rest.server.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,4 +49,7 @@ public class ScriptsController {
 		SMS.updateScript(script);
 	}
 	
+	public void upVote(String sId) {
+		
+	}
 }

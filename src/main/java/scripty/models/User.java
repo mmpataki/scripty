@@ -18,7 +18,19 @@ public class User implements Serializable {
 	private Long views;
 	private Long comments;
 	
+	public User() {
+		// TODO Auto-generated constructor stub
+	}
 	
+	public User(String userName, String emailId, char[] password, Long uploads, Long views, Long comments) {
+		this.userName = userName;
+		this.emailId = emailId;
+		this.password = password;
+		this.uploads = uploads;
+		this.views = views;
+		this.comments = comments;
+	}
+
 	@Override
 	public boolean equals(Object otherUser) {
 		return emailId.equals(((User)otherUser).getEmailId());

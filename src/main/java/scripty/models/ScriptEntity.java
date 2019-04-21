@@ -2,6 +2,8 @@ package scripty.models;
 
 import java.util.List;
 
+import org.springframework.util.StringUtils;
+
 public class ScriptEntity {
 
 	String id;
@@ -96,6 +98,33 @@ public class ScriptEntity {
 
 	public void setRelated(List<Long> related) {
 		this.related = related;
+	}
+
+	public void readNewValues(ScriptEntity script) {
+		if(!StringUtils.isEmpty(script.description))
+			description = script.description;
+		if(!StringUtils.isEmpty(script.exampleUsage))
+			exampleUsage = script.exampleUsage;
+		if(!StringUtils.isEmpty(script.script))
+			this.script = script.script;
+		if(!StringUtils.isEmpty(script.shellType))
+			shellType = script.shellType;
+	}
+
+	public void upVote() {
+		upVotes++;
+	}
+
+	public void downVote() {
+		downVotes++;
+	}
+
+	public void addComment(Comment comment) {
+		throw new UnsupportedOperationException("Unsuported operation");
+	}
+
+	public void removeComment(String commentId) {
+		throw new UnsupportedOperationException("Unsuported operation");
 	}
 	
 }

@@ -13,14 +13,19 @@ import java.util.Set;
 import javax.annotation.PostConstruct;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import scripty.models.User;
 import scripty.repository.api.UserRepository;
+import scripty.security.authorization.api.AuthUtil;
 
 @Service
 public class UserRepositoryImpl implements UserRepository {
 
+	@Autowired
+	AuthUtil AU;
+	
 	String fileName = "./users.db";
 	Logger logger = Logger.getLogger(UserRepositoryImpl.class);
 
@@ -39,7 +44,9 @@ public class UserRepositoryImpl implements UserRepository {
 
 	@Override
 	public User get(String id) throws Exception {
-		return userId2User.get(id);
+		if(userId2User.containsKey(id))
+			return userId2User.get(id);
+		throw new NullPointerException("user " + id + " doesn't exist");
 	}
 
 	@Override

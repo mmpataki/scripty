@@ -94,7 +94,7 @@ public class UserManagementServiceImpl implements UserManagementService {
 	public class UserIterator implements Iterable<User> {
 
 		String currentUID;
-
+		
 		public UserIterator(String fromUID) {
 			this.currentUID = fromUID;
 		}

@@ -21,14 +21,14 @@ public class UserManagementServiceTest {
 	User[] users = new User[SIZE]; 
 	
 	@Test
-	public void createUser() {
+	public void createUser() throws Exception {
 		for (int i = 0; i < SIZE; i++) {
 			String uname = "user" + i;
 			users[i] = client.createUser(
 							new User(
 								uname,
-								"user" + i + "@scripty.com",
-								new char[] {'1', '2', '3', '4'},
+								"user" + System.currentTimeMillis() + "@scripty.com",
+								"12345",
 								0L,
 								0L,
 								0L
@@ -43,11 +43,11 @@ public class UserManagementServiceTest {
 	}
 	
 	@Test(dependsOnMethods = "createUser")
-	public void createDuplicateUser() {
+	public void createDuplicateUser() throws Exception {
 		User u = new User(
 				"u1duptest",
-				"userduptest" + "@scripty.com",
-				new char[] {'1', '2', '3', '4'},
+				"userduptest" + System.currentTimeMillis() + "@scripty.com",
+				"12345",
 				0L,
 				0L,
 				0L
@@ -65,8 +65,9 @@ public class UserManagementServiceTest {
 	}
 	
 	@Test(dependsOnMethods = "createDuplicateUser")
-	public void getUser() {
+	public void getUser() throws Exception {
 		for (User user : users) {
+			System.out.println("getting : " + user.getEmailId());
 			User u = client.getUser(user.getId());
 			if(u == null) {
 				fail("returned null");
@@ -77,7 +78,7 @@ public class UserManagementServiceTest {
 	}
 	
 	@Test(dependsOnMethods = "iterateUsers")
-	public void deleteUser() {
+	public void deleteUser() throws Exception {
 		for (User user : users) {
 			client.deleteUser(user.getId());
 		}

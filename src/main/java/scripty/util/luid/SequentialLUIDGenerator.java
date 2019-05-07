@@ -1,18 +1,37 @@
 package scripty.util.luid;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SequentialLUIDGenerator implements LUIDService, LUIDRenewer {
 
+	private String persistFile = "seqgen.db";
 	public static final int DEFAULT_BLOCK_SIZE = 100;
 	static ConcurrentHashMap<String, SeqToken> registry;
 
+	Logger logger = Logger.getLogger(SequentialLUIDGenerator.class);
+	
+	@SuppressWarnings("unchecked")
 	public SequentialLUIDGenerator() {
-		registry = new ConcurrentHashMap<>();
+		registry = (ConcurrentHashMap<String, SeqToken>) read(persistFile);
+		if(registry == null) {
+			registry = new ConcurrentHashMap<String, SeqToken>();
+		} else {
+			for (SeqToken old : registry.values()) {
+				SeqToken tok = new SeqToken(old.getName(), old.getBlockSize(), this);
+				if(tok != null) {
+					registry.put(old.getName(), tok);
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -25,14 +44,16 @@ public class SequentialLUIDGenerator implements LUIDService, LUIDRenewer {
 		blockSize = blockSize == 0 ? DEFAULT_BLOCK_SIZE : blockSize;
 		SeqToken tok = new SeqToken(name, blockSize, this);
 		if(registry.putIfAbsent(name, tok) != null) {
-			throw new Exception("Token already exists. " + name);
+			return registry.get(name);
 		}
+		write(persistFile, registry);
 		return tok;
 	}
 	
 	@Override
 	public void unregister(String name) throws Exception {
 		registry.remove(name);
+		write(persistFile, registry);
 	}
 
 	@Override
@@ -41,65 +62,20 @@ public class SequentialLUIDGenerator implements LUIDService, LUIDRenewer {
 		tok.update(tok.current() + tok.blockSize());
 	}
 	
-	static class SeqToken implements Token, RenewableToken {
-		
-		private LUIDRenewer renewer;
-		private int blockSize;
-		private String name;
-		private volatile AtomicLong current;
-		private volatile long rangeEnd;
-		
-		public SeqToken(String name, int blockSize, LUIDRenewer renewer) {
-			this.name = name;
-			this.blockSize = blockSize;
-			this.renewer = renewer;
-			this.current = new AtomicLong(0);
-			this.rangeEnd = 0;
-		}
-		
-		@Override
-		public String getName() {
-			return name;
-		}
-		
-		@Override
-		public String next() throws Exception {
-			if(current.get() == rangeEnd) {
-				updateRange();
-			}
-			return current.getAndIncrement() + "";
-		}
-
-		private void updateRange() throws Exception {
-			renewer.renew(this);
-		}
-
-		@Override
-		public int getBlockSize() {
-			return blockSize;
-		}
-		
-		@Override
-		public boolean equals(Object obj) {
-			return (this == obj || name.equals(((SeqToken)obj).name));
-		}
-
-		
-		/* shouldn't be available for the user. */
-		@Override
-		public void update(long rangeEnd) {
-			this.rangeEnd = rangeEnd;
-		}
-
-		@Override
-		public long current() {
-			return current.get();
-		}
-
-		@Override
-		public int blockSize() {
-			return blockSize;
+	
+	public static void write(String file, Object o) {
+		try (FileOutputStream fos = new FileOutputStream(file)) {
+			new ObjectOutputStream(fos).writeObject(o);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
-
+	public static Object read(String file) {
+		try (FileInputStream fos = new FileInputStream(file)) {
+			return new ObjectInputStream(fos).readObject();
+		} catch (IOException | ClassNotFoundException e) {
+		}
+		return null;
+	}
+	
 }

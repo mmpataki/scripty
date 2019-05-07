@@ -1,6 +1,6 @@
 package scripty.util.luid;
 
-public interface LUIDRenewer {
+interface LUIDRenewer {
 
 	/**
 	 * Renews a token.

@@ -22,4 +22,9 @@ public interface Token {
 	 * @return
 	 */
 	public int getBlockSize();
+	
+	/**
+	 * Gets the last allocated ID.
+	 */
+	public String last();
 }

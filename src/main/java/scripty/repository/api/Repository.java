@@ -3,6 +3,7 @@ package scripty.repository.api;
 import java.util.List;
 import java.util.Set;
 
+
 public interface Repository<KeyType, ValueType> {
 	
 	public interface UpdateFunction<ValueType> {

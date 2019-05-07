@@ -15,10 +15,18 @@ public class ScriptManagementServiceImpl implements ScriptManagementService {
 	@Autowired
 	ScriptRepository SRS;
 
+	
 	@Override
-	public void addScript(ScriptEntity script) throws Exception {
-		Assert.notNull(script, "Script shouldn't be null");
+	public ScriptEntity addScript(ScriptEntity inScript) throws Exception {
+		Assert.notNull(inScript, "Script shouldn't be null");
+		
+		ScriptEntity script = new ScriptEntity(
+				inScript.getTitle(), inScript.getScript(), 
+				inScript.getShellType(), inScript.getDescription(), 
+				inScript.getExampleUsage());
+		
 		SRS.put(script);
+		return script;
 	}
 
 	@Override
@@ -48,12 +56,17 @@ public class ScriptManagementServiceImpl implements ScriptManagementService {
 
 	@Override
 	public void addComment(String sId, Comment comment) throws Exception {
-		SRS.applyUpdate(sId, (ScriptEntity oldScript) -> oldScript.addComment(comment));
+		SRS.addComment(sId, comment);
 	}
 
 	@Override
-	public void removeComment(String sId, String commentId) throws Exception {
-		SRS.applyUpdate(sId, (ScriptEntity oldScript) -> oldScript.removeComment(commentId));
+	public void removeComment(String sId, String cId) throws Exception {
+		SRS.removeComment(sId, cId);
+	}
+
+	@Override
+	public String getLastId() {
+		return SRS.getLastId();
 	}
 
 }

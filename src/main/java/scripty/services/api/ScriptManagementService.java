@@ -5,7 +5,7 @@ import scripty.models.ScriptEntity;
 
 public interface ScriptManagementService {
 	
-	public void addScript(ScriptEntity script) throws Exception;
+	public ScriptEntity addScript(ScriptEntity script) throws Exception;
 	
 	public void deleteScript(String sId) throws Exception;
 	
@@ -20,5 +20,7 @@ public interface ScriptManagementService {
 	public void addComment(String sId, Comment comment) throws Exception;
 	
 	public void removeComment(String sId, String commentId) throws Exception;
+	
+	public String getLastId();
 	
 }

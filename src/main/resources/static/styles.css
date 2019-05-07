@@ -1,0 +1,91 @@
+body {
+    margin: 0px;
+    padding: 0px;
+}
+
+.app-title {
+    font-size: 1.3em;
+    font-weight: bolder;
+    float: left;
+}
+
+.rf {
+    float: right;
+}
+
+.app-nav-bar {
+    background-color: lavender;
+    width: 100%;
+    padding: 3px;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif
+}
+
+.script-content-box {
+    width: 100%;
+    height: 100%;
+    font-family: 'Consolas', 'Courier New';
+    font-size: .9em;
+    float: left;
+    overflow-x: auto;
+    background-color: #fafafa;
+}
+
+.script-content {
+    margin: 5px;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+}
+
+.script-scrollpane {
+    margin: auto;
+}
+
+.text-button {
+
+}
+
+.script-description {
+    font-style: italic;
+}
+
+.script-title {
+    font-size: 1.0em;
+    font-weight: bold;
+}
+
+.app-title-bar {
+    margin: auto;
+    display: inline-block;
+}
+
+.script-cell {
+    padding-top: 20px;
+    border-bottom: solid 1px lightgray;
+    margin-bottom: 10px;
+}
+
+.edit-div {
+    margin: auto;
+    margin-top: 20px;
+}
+
+input, form, textarea, select {
+    width: 100%;
+}
+
+.mw {
+    min-width: 600px;
+    max-width: 600px;
+}
+.searchbox {
+    display: inline-block;
+}
+
+.creator {
+    float: left;
+}
+
+pre.prettyprint {
+    border: none !important;
+}

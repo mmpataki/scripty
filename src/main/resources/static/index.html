@@ -1,0 +1,97 @@
+<html>
+
+<head>
+	<link rel="stylesheet" href="styles.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+	<script>
+		let SB = "http://localhost:8080"
+		let app = angular.module('scripty', []);
+		app.controller('index', function ($scope, $http) {
+			$scope.appName = "scripty"
+			$http.get(`${SB}/scripts`).then(
+				function (resp) {
+					if (!resp.data.success)
+						return;
+					$scope.scripts = resp.data.item
+				}
+			);
+
+			$scope.upVote = function (id) {
+				$http.patch(`${SB}/scripts/${id}/upvote`).then(
+					function (resp) {
+						if (!resp.data.success)
+							return;
+						for (let i = 0; i < $scope.scripts.length; i++) {
+							const e = $scope.scripts[i];
+							if (e.id == id)
+								e.upVotes++;
+						}
+					}
+				)
+			}
+			$scope.downVote = function (id) {
+				$http.patch(`${SB}/scripts/${id}/downvote`).then(
+					function (resp) {
+						if (!resp.data.success)
+							return;
+						for (let i = 0; i < $scope.scripts.length; i++) {
+							const e = $scope.scripts[i];
+							if (e.id == id)
+								e.downVotes++;
+						}
+					}
+				)
+			}
+
+		})
+	</script>
+</head>
+
+<body ng-app="scripty" ng-controller="index">
+	<div class="app-nav-bar">
+		<center>
+			<div class="app-title-bar mw">
+				<span class="app-title">{{appName}}</span>
+				<div class="rf">
+					<span class="searchbox">
+						<input name="search" title="search" placeholder="search" />
+					</span>
+					<a href='addscript.html' title="add a script" class="text-button">✚</a>
+				</div>
+			</div>
+		</center>
+	</div>
+	<table class="script-scrollpane mw">
+		<tr ng-repeat="s in scripts">
+			<td class="script-cell mw">
+				<div>
+					<div>
+						<span class="script-title lf">{{s.title}}</span>
+						<div class="rf">
+							<code ng-click="upVote(s.id)" class="text-button">△</code>
+							<code>{{s.upVotes}}</code>
+							<code ng-click="downVote(s.id)" class="text-button">▽</code>
+							<code>{{s.downVotes}}</code>
+						</div>
+					</div>
+					<br />
+					<span class="script-description">{{s.description}}</span>
+					<br />
+					<div class="script-content-box">
+						<pre class="script-content prettyprint">{{s.script}}</pre>
+					</div>
+					<i>example usage</i>
+					<div class="script-content-box">
+						<pre class="prettyprint script-content">{{s.exampleUsage}}</pre>
+					</div>
+					<div class="creator">
+						<span>{{s.user}}</span>
+					</div>
+				</div>
+				<br />
+			</td>
+		</tr>
+	</table>
+	<script defer="defer" src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+</body>
+</html>

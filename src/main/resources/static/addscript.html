@@ -1,0 +1,71 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="styles.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>          
+        <script>
+            var SB = "http://localhost:8080";
+            var app = angular.module('addscript', []);
+            app.controller('addscript_controller', function ($scope, $http) {
+                $scope.appName = "scripty"
+                $scope.script = {
+                    title: "",
+                    description: "",
+                    shellType: "bash",
+                    script: "",
+                    exampleUsage: ""
+                };
+                $scope.postScript = function () {
+                    alert(JSON.stringify($scope.script));
+                    $http.post(`${SB}/scripts`, $scope.script).then(
+                        function (resp) {
+                            resp = resp.data;
+                            alert(JSON.stringify(resp));
+                            window.location = `${SB}/`;
+                        }
+                    )
+                }
+            });
+        </script>
+    </head>
+    <body ng-app="addscript" ng-controller="addscript_controller">
+        <div class="app-nav-bar">
+            <center>
+                <div class="app-title-bar mw">
+                    <span class="app-title">{{appName}}</span>
+                    <div class="rf">
+                        <span class="searchbox">
+                            <input name="search" title="search" placeholder="search"/>
+                        </span>
+                    </div>
+                </div>
+            </center>
+        </div>
+        <table class="edit-div mw">
+            <tr>
+                <td ng-model="script">
+                    <span>Edit a new script</span>
+                    <br/>
+                    <i>title</i><br/>
+                    <input ng-model="script.title" /><br/>
+                    
+                    <i>description</i><br/>
+                    <input ng-model="script.description" /><br/>
+                    
+                    <i>shell type</i><br/>
+                    <select ng-model="script.shellType">
+                        <option>bash</option>
+                        <option>csh</option>
+                    </select><br/>
+                    
+                    <i>script</i><br/>
+                    <textarea ng-model="script.script"></textarea><br/>
+                    
+                    <i>example usage</i><br/>
+                    <textarea ng-model="script.exampleUsage"></textarea><br/>
+                    
+                    <button ng-click="postScript()">submit</button>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

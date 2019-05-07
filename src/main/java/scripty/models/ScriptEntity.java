@@ -1,13 +1,18 @@
 package scripty.models;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.util.StringUtils;
 
-public class ScriptEntity {
+public class ScriptEntity implements Serializable{
+
+	private static final long serialVersionUID = 5765617985954411664L;
 
 	String id;
 	
+	String title;
 	String script;
 	String userId;
 	String shellType;
@@ -18,7 +23,33 @@ public class ScriptEntity {
 	Long upVotes;
 	Long downVotes;
 	
-	List<Long> related;
+	List<String> related;
+	
+	public ScriptEntity() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public ScriptEntity(String title, String script, String shellType, String description, String exampleUsage) {
+		this.title = title;
+		this.script = script;
+		this.shellType = shellType;
+		this.description = description;
+		this.exampleUsage = exampleUsage;
+		
+		views = 0L;
+		upVotes = 0L;
+		downVotes = 0L;
+		
+		related = new ArrayList<>();
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
 	public String getId() {
 		return id;
@@ -92,11 +123,11 @@ public class ScriptEntity {
 		this.downVotes = downVotes;
 	}
 
-	public List<Long> getRelated() {
+	public List<String> getRelated() {
 		return related;
 	}
 
-	public void setRelated(List<Long> related) {
+	public void setRelated(List<String> related) {
 		this.related = related;
 	}
 
@@ -119,12 +150,9 @@ public class ScriptEntity {
 		downVotes++;
 	}
 
-	public void addComment(Comment comment) {
-		throw new UnsupportedOperationException("Unsuported operation");
+	@Override
+	public boolean equals(Object obj) {
+		ScriptEntity that = (ScriptEntity)obj;
+		return (this.id.equals(that.id) || this.title.equals(that.title) || this.script.equals(that.script));
 	}
-
-	public void removeComment(String commentId) {
-		throw new UnsupportedOperationException("Unsuported operation");
-	}
-	
 }

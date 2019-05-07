@@ -2,6 +2,8 @@ package scripty.models;
 
 import java.io.Serializable;
 
+import scripty.security.authentication.EncodeUtil;
+
 public class User implements Serializable {
 	
 	private static final long serialVersionUID = -3755719690034931012L;
@@ -11,7 +13,7 @@ public class User implements Serializable {
 	/* info */
 	private String userName;
 	private String emailId;
-	private char[] password;
+	private String password;
 	
 	/* metrics */
 	private Long uploads;
@@ -22,7 +24,7 @@ public class User implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public User(String userName, String emailId, char[] password, Long uploads, Long views, Long comments) {
+	public User(String userName, String emailId, String password, Long uploads, Long views, Long comments) {
 		this.userName = userName;
 		this.emailId = emailId;
 		this.password = password;
@@ -54,11 +56,11 @@ public class User implements Serializable {
 	public void setEmailId(String emailId) {
 		this.emailId = emailId;
 	}
-	public char[] getPassword() {
+	public String getPassword() {
 		return password;
 	}
-	public void setPassword(char[] password) {
-		this.password = password;
+	public void setPassword(String password) {
+		this.password = EncodeUtil.encodePassword(password);
 	}
 	public Long getUploads() {
 		return uploads;
